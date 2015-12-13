@@ -7,17 +7,18 @@ import fitness.AbstractFitness
 
 object FirstSMTWTPSearch extends AbstractSearch[Permutation, SMTWTPModel] {
 
-  override def run(solution: Permutation, model: SMTWTPModel,
+  override def run(solution: Permutation, currentFitness: Int, model: SMTWTPModel,
                    neighbors: AbstractNeighborsGenerator[Permutation],
+                   listNeighbors: List[Permutation],
                    fitness: AbstractFitness[Permutation, SMTWTPModel]): Permutation = {
-    if (neighbors hasDoneALap)
+    if (listNeighbors isEmpty)
       return solution
-    val newSolution = neighbors.neighbor(solution)
-    if (fitness.compute(newSolution, model) >= fitness.compute(solution, model)) {
-      run(solution, model, neighbors, fitness)
-    } else {
-      neighbors.reset
-      run(newSolution, model, neighbors, fitness)
-    }
+
+    val newNeighbor = listNeighbors.head
+    val newFitness = fitness(newNeighbor, model)
+    if (newFitness < currentFitness)
+      run(newNeighbor, newFitness, model, neighbors, neighbors(newNeighbor), fitness)
+    else
+      run(solution, currentFitness, model, neighbors, listNeighbors.tail, fitness)
   }
 }

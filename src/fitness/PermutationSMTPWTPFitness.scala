@@ -5,13 +5,16 @@ import model.SMTWTPModel
 
 object PermutationSMTPWTPFitness extends AbstractFitness[Permutation, SMTWTPModel] {
   
-  override def compute(solution : Permutation, model : SMTWTPModel) : Int = {
-    var currentTime = 0
-      solution.Solution.foldLeft(0) {
-        case (acc,i) =>
-          currentTime += model.processingTimes(i)
-          acc + (Math.max(currentTime-model.dueDates(i), 0) * model.weights(i))
-      }
+  override implicit def apply(solution : Permutation, model : SMTWTPModel) : Int = computeSMTPWTP(solution,model)
+  
+  private def computeSMTPWTP(solution : Permutation, model : SMTWTPModel,
+      currentTime : Int = 0, i : Int = 0, score : Int = 0) : Int = {
+    if (i == solution.permutation.length)
+      score
+    else {
+      val time = model.processingTimes(solution(i))+currentTime
+      computeSMTPWTP(solution, model, time, i+1, score + (Math.max(time-model.dueDates(solution(i)), 0) * model.weights(solution(i))))
+    }
   }
   
 }

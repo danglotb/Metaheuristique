@@ -5,6 +5,6 @@ import solution.AbstractSolution
 
 trait AbstractHeuristique[M <: AbstractModel,S <: AbstractSolution] {
   
-  def buildHeuristique(model : M) : S
+  implicit def apply(model : M) : S
   
 }

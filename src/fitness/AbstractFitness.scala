@@ -6,6 +6,6 @@ import model.AbstractModel
 
 trait AbstractFitness[S <: AbstractSolution, M <: AbstractModel ] {
   
-  def compute(solution : S, model : M) : Int
+  implicit def apply(solution : S, model : M) : Int
   
 }

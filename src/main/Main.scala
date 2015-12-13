@@ -1,23 +1,27 @@
 package main
 
-import localsearch.FirstSMTWTPSearch
+import localsearch._
 import fitness.PermutationSMTPWTPFitness
-import neighbors.PermutationSwap
+import neighbors._
+import heuristiques._
 
 object Main extends App {
   
   val model = input.SMTWTPReader.read("data/wt100")
+
+  val solution = SMTWTPEDDHeuristique(model(0))
   
-  var firstSolution = heuristiques.SMTWTPEDDHeuristique.buildHeuristique(model(0))
+  val time = System.currentTimeMillis()
   
-  println(firstSolution)
-  
-  firstSolution.Solution.foreach { s => print(model(0).dueDates(s) +" ") } 
-  
-  println()
-  
-  val localSearchSol = FirstSMTWTPSearch.run(firstSolution, model(0), PermutationSwap, PermutationSMTPWTPFitness)
-  
-  println(PermutationSMTPWTPFitness.compute(localSearchSol, model(0)))
+  println(PermutationSMTPWTPFitness(
+      BestSMTWTPSearch.run(
+      solution,
+      PermutationSMTPWTPFitness(solution,model(0)),
+      model(0),
+      PermutationInsert,
+      PermutationInsert(solution),
+      PermutationSMTPWTPFitness), model(0)))
+      
+  println( (System.currentTimeMillis() - time) + " ms")
   
 }

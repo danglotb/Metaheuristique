@@ -3,25 +3,14 @@ package neighbors
 import solution.Permutation
 
 object PermutationSwap extends AbstractNeighborsGenerator[Permutation] {
+
+  private def swap(solution: Permutation, i: Int, j: Int) : Permutation =
+      new Permutation(solution.permutation.updated(i, solution(j)).updated(j, solution(i)))
   
-  override def neighbor(solution : Permutation) : Permutation = {
-    if (start == (-1,-1))
-        reset
-    val newPermutation = solution.Solution
-    val tmp = newPermutation(cursorA)
-    newPermutation(cursorA) = newPermutation(cursorB)
-    newPermutation(cursorB) = tmp
-    updateCursor(solution.Solution.length)
-    if ( (cursorA,cursorB) == start) lap = true
-    new Permutation(newPermutation)
+  implicit override def apply(solution: Permutation): List[Permutation] = {
+    val indices = solution.permutation.indices
+    val tails = indices.tail map (i => indices drop i)
+    val couples = scala.util.Random.shuffle((indices zip tails) flatMap (c => c._2 map (i => (c._1, i))))
+    couples.map { x => swap(solution, x._1, x._2) }.toList
   }
-  
-  override def neighbors(solution : Permutation, start : (Int,Int) = (cursorA, cursorB), 
-      list : List[Permutation] = Nil) : List[Permutation] = {
-      if ( (cursorA,cursorB) == start && list.length > 0)
-        list
-      else
-        neighbors(solution, start, list :+ neighbor(solution))
-  }
-  
 }

@@ -1,22 +1,14 @@
 package solution
 
-class Permutation(size : Int) extends AbstractSolution {
-    
-  private var solution = Range(0,size,1).toArray
+class Permutation(Permutation : List[Int]) extends AbstractSolution {
   
-  def this(a : Array[Int])  {
-    this(a.length)
-    solution = a
-  }
+  implicit def apply(n : Int) = Permutation.apply(n)
   
-  def Solution = solution
+  def permutation() = Permutation
   
   override def toString() : String = {
-    var str = ""
-    solution.foreach { s =>
-      str += s + " "
+    Permutation.foldLeft(" ") {
+      case (acc,i) => acc + i + " "
     }
-    str
   }
-  
 }

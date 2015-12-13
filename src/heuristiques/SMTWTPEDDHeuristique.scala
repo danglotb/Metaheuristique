@@ -5,8 +5,6 @@ import solution.Permutation
 
 object SMTWTPEDDHeuristique extends AbstractHeuristique[SMTWTPModel,Permutation]{
   
-  def buildHeuristique(model : SMTWTPModel) : Permutation =  {
-    new Permutation(Range(0,model.nbJobs,1).sortBy { x => -model.dueDates(x) }.toArray)
-  }
+  implicit override def apply(model : SMTWTPModel) : Permutation = new Permutation(List.range(0,model.nbJobs()).sortBy { x => model.dueDates(x) })
   
 }
