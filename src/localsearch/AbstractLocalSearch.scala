@@ -5,7 +5,7 @@ import neighbors.AbstractNeighborsGenerator
 import fitness.AbstractFitness
 import model.AbstractModel
 
-trait AbstractSearch[S <: AbstractSolution, M <: AbstractModel] {
+trait AbstractLocalSearch[S <: AbstractSolution, M <: AbstractModel] {
   
   def run(solution : S,
       currentFitness : Int,

@@ -4,13 +4,13 @@ import solution.Permutation
 
 object PermutationInsert extends AbstractNeighborsGenerator[Permutation] {
   
-  implicit override def apply(solution : Permutation, i : Int, j : Int) : Permutation = {
+  implicit private def apply(solution : Permutation, i : Int, j : Int) : Permutation = {
     
     val min = Math.min(i,j)
     val max = Math.max(i,j)
     
-    val front = solution.permutation.drop(min)
-    val end  = solution.permutation.dropRight(max-1)
+    val front = solution.permutation.slice(0, min)
+    val end  = solution.permutation.drop(max+1)
     val middle = solution.permutation.diff(front).diff(end).diff(List(solution(i)))
     
     if (i > j)
