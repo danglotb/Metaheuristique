@@ -5,6 +5,6 @@ import solution.AbstractSolution
 
 trait AbstractNeighborsGenerator[T <: AbstractSolution] {
   
-  implicit def apply(solution: T): List[T]
+   def apply(solution: T): List[T]
     
 }
