@@ -7,7 +7,7 @@ import fitness.AbstractFitness
 
 object BestSMTWTPSearch extends AbstractLocalSearch[Permutation, SMTWTPModel] {
 
-  implicit override def apply(solution: Permutation,
+  override def apply(solution: Permutation,
                    currentFitness : Int,
                    model: SMTWTPModel,
                    neighbors: AbstractNeighborsGenerator[Permutation],

@@ -5,7 +5,7 @@ import model.SMTWTPModel
 
 object PermutationSMTPWTPFitness extends AbstractFitness[Permutation, SMTWTPModel] {
   
-  override implicit def apply(solution : Permutation, model : SMTWTPModel) : Int = computeSMTPWTP(solution,model)
+  override def apply(solution : Permutation, model : SMTWTPModel) : Int = computeSMTPWTP(solution,model)
   
   private def computeSMTPWTP(solution : Permutation, model : SMTWTPModel,
       currentTime : Int = 0, i : Int = 0, score : Int = 0) : Int = {
