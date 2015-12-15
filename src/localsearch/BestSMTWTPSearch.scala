@@ -7,7 +7,7 @@ import fitness.AbstractFitness
 
 object BestSMTWTPSearch extends AbstractLocalSearch[Permutation, SMTWTPModel] {
 
-  override def run(solution: Permutation,
+  implicit override def apply(solution: Permutation,
                    currentFitness : Int,
                    model: SMTWTPModel,
                    neighbors: AbstractNeighborsGenerator[Permutation],
@@ -16,7 +16,7 @@ object BestSMTWTPSearch extends AbstractLocalSearch[Permutation, SMTWTPModel] {
     val bestNeighbor = listNeighbors.minBy { x => fitness(x, model) }
     val bestNeighborFitness = fitness(bestNeighbor, model)
     if (bestNeighborFitness < currentFitness)
-      run(bestNeighbor, bestNeighborFitness, model, neighbors, neighbors(bestNeighbor), fitness)
+      this(bestNeighbor, bestNeighborFitness, model, neighbors, neighbors(bestNeighbor), fitness)
     else
       solution
   }

@@ -15,7 +15,7 @@ object Main extends App {
   val time = System.currentTimeMillis()
   
   println(PermutationSMTPWTPFitness(
-      BestSMTWTPSearch.run(
+      BestSMTWTPSearch(
       solution,
       PermutationSMTPWTPFitness(solution,model(18)),
       model(18),
