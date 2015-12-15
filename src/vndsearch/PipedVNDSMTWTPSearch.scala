@@ -7,7 +7,7 @@ import neighbors.AbstractNeighborsGenerator
 
 object PipedVNDSMTWTPSearch extends AbstractVNDSearch[Permutation, SMTWTPModel] {
 
-  def apply(solution: Permutation,
+  override def apply(solution: Permutation,
             currentFitness: Int,
             model: SMTWTPModel,
             neighbors: List[AbstractNeighborsGenerator[Permutation]],

@@ -12,7 +12,7 @@ object BestSMTWTPSearch extends AbstractLocalSearch[Permutation, SMTWTPModel] {
                    model: SMTWTPModel,
                    neighbors: AbstractNeighborsGenerator[Permutation],
                    listNeighbors: List[Permutation],
-                   fitness: AbstractFitness[Permutation, SMTWTPModel]): Permutation = {
+                   fitness: AbstractFitness[Permutation, SMTWTPModel]) : Permutation = {
     val bestNeighbor = listNeighbors.minBy { x => fitness(x, model) }
     val bestNeighborFitness = fitness(bestNeighbor, model)
     if (bestNeighborFitness < currentFitness)

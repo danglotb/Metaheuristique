@@ -11,7 +11,7 @@ trait AbstractLocalSearch[S <: AbstractSolution, M <: AbstractModel] {
       currentFitness : Int,
       model : M, 
       neighbors : AbstractNeighborsGenerator[S],
-      listNeighbors: List[S],
+      listNeighbors : List[S],
       fitness : AbstractFitness[S,M]) : S
   
 }
