@@ -4,12 +4,11 @@ import solution.Permutation
 
 object PermutationExchange extends AbstractNeighborsGenerator[Permutation] {
   
-  private def apply(solution : Permutation, i : Int) : Permutation = 
-  new Permutation(solution.permutation.updated(i, solution(i+1)).updated(i+1, solution(i)))
+  override def apply(solution : Permutation, i : Int, j : Int) : Permutation = PermutationSwap(solution,i,j)
   
   override def apply(solution : Permutation) : List[Permutation] = {
     val indices = scala.util.Random.shuffle((solution.permutation.indices).diff(Seq(solution.permutation.indices.last)))
-    indices.map { i => this(solution, i) }.toList
+    indices.map { i => this(solution, i, i+1) }.toList
   }
   
 }

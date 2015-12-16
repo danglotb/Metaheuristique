@@ -10,8 +10,9 @@ trait AbstractLocalSearch[S <: AbstractSolution, M <: AbstractModel] {
   def apply(solution : S,
       currentFitness : Int,
       model : M, 
-      neighbors : AbstractNeighborsGenerator[S],
+      neighbors : List[AbstractNeighborsGenerator[S]],
       listNeighbors : List[S],
-      fitness : AbstractFitness[S,M]) : S
+      fitness : AbstractFitness[S,M],
+      indexNeighbors : Int) : S
   
 }

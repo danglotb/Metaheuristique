@@ -4,7 +4,7 @@ import solution.Permutation
 
 object PermutationInsert extends AbstractNeighborsGenerator[Permutation] {
   
-  private def apply(solution : Permutation, i : Int, j : Int) : Permutation = {
+  override def apply(solution : Permutation, i : Int, j : Int) : Permutation = {
     
     val min = Math.min(i,j)
     val max = Math.max(i,j)

@@ -11,9 +11,10 @@ trait AbstractAdvancedSearch[S <: AbstractSolution, M <: AbstractModel] {
   def apply(solution: S,
             model: M,
             intensification: AbstractLocalSearch[S, M],
-            neighbors: AbstractNeighborsGenerator[S],
+            neighbors: List[AbstractNeighborsGenerator[S]],
             diversification: AbstractNeighborsGenerator[S],
             fitness: AbstractFitness[S, M],
-            currentFitness: Int): S
+            currentFitness: Int,
+            acceptanceCriterion : ( () => Boolean)) : S
 
 }

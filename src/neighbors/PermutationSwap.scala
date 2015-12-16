@@ -4,7 +4,7 @@ import solution.Permutation
 
 object PermutationSwap extends AbstractNeighborsGenerator[Permutation] {
 
-  private def apply(solution: Permutation, i: Int, j: Int) : Permutation =
+  override def apply(solution: Permutation, i: Int, j: Int) : Permutation =
       new Permutation(solution.permutation.updated(i, solution(j)).updated(j, solution(i)))
   
   override def apply(solution: Permutation): List[Permutation] = {
