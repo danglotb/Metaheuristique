@@ -13,4 +13,7 @@ object PermutationSwap extends AbstractNeighborsGenerator[Permutation] {
     val couples = scala.util.Random.shuffle((indices zip tails) flatMap (c => c._2 map (i => (c._1, i))))
     couples.map { x => this(solution, x._1, x._2) }.toList
   }
+  
+  override def toString() : String = "swap"
+  
 }

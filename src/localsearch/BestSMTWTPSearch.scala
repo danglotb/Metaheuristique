@@ -16,10 +16,13 @@ object BestSMTWTPSearch extends AbstractLocalSearch[Permutation, SMTWTPModel] {
                      indexNeighbor: Int = 0): Permutation = {
     val bestNeighbor = listNeighbors.minBy { x => fitness(x, model) }
     val bestNeighborFitness = fitness(bestNeighbor, model)
-    if (bestNeighborFitness < currentFitness)
+    if (bestNeighborFitness < currentFitness) {
+      score += bestNeighborFitness
       this(bestNeighbor, bestNeighborFitness, model, neighbors, (neighbors(indexNeighbor)(bestNeighbor)), fitness)
-    else
+    } else
       solution
   }
 
+  override def toString() : String = "best"
+  
 }

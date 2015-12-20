@@ -7,4 +7,6 @@ object SMTWTPRandomHeuristique extends AbstractHeuristique[SMTWTPModel,Permutati
   
   override  def apply(model : SMTWTPModel) : Permutation = new Permutation(scala.util.Random.shuffle(List.range(0,model.nbJobs())))
   
+  override def toString() : String = "rnd"
+  
 }

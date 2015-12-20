@@ -9,6 +9,7 @@ object PermutationSMTPWTPFitness extends AbstractFitness[Permutation, SMTWTPMode
   
   private def computeSMTPWTP(solution : Permutation, model : SMTWTPModel,
       currentTime : Int = 0, i : Int = 0, score : Int = 0) : Int = {
+    counter += 1
     if (i == solution.permutation.length)
       score
     else {

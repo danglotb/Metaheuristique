@@ -23,4 +23,7 @@ object VNDSMTWTPSearch extends AbstractLocalSearch[Permutation, SMTWTPModel] {
     else
       this(solution, currentFitness, model, neighbors, (neighbors(indexNeighbors + 1)(solution)), fitness, indexNeighbors + 1)
   }
+  
+  override def toString() : String = "vnd"
+  
 }

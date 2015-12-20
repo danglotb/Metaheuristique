@@ -16,4 +16,6 @@ object SMTWTPMDDHeuristique extends AbstractHeuristique[SMTWTPModel,Permutation]
     } 
   }
   
+  override def toString() : String = "mdd"
+  
 }

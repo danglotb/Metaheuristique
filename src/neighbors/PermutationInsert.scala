@@ -26,4 +26,6 @@ object PermutationInsert extends AbstractNeighborsGenerator[Permutation] {
     couples.map { x => this(solution, x._1, x._2) }.toList
   }
   
+  override def toString() : String = "insert"
+  
 }

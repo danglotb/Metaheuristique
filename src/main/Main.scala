@@ -7,33 +7,48 @@ import neighbors._
 import heuristiques._
 import localsearch._
 import advancedsearch._
+import util.Logger
 
 object Main extends App {
   
-  def TimeOut() : Boolean = {
-    if ((System.currentTimeMillis() - time) > 20000)
-      true
-    else
-      false
-  }
-
   val model = input.SMTWTPReader.read("data/wt100")
-
-  val solution = SMTWTPEDDHeuristique(model(2))
-
-  val time = System.currentTimeMillis()
   
-  println(PermutationSMTPWTPFitness(
-    ILSSMTWTP(
-      solution,
-      model(2),
-      BestSMTWTPSearch,
-      List(PermutationSwap),
-      PermutationInsert,
-      PermutationSMTPWTPFitness,
-      PermutationSMTPWTPFitness(solution, model(2)),
-      TimeOut), model(2)))
+  val init = SMTWTPEDDHeuristique
+  
+  val neighborsGen = List(PermutationSwap)
+  
+  val select = BestSMTWTPSearch
+  
+  val str  = select.toString+"_"+init.toString+"_"+neighborsGen(0).toString()
+  
+  Logger.open("out/"+str)
 
-  println((System.currentTimeMillis() - time) + " ms")
+  for (m <- 0 until model.length) {
+    println(m)
+    val time = System.currentTimeMillis()
+    val solution = init(model(m))
+    val score = PermutationSMTPWTPFitness(
+      select(
+        solution,
+        PermutationSMTPWTPFitness(solution, model(m)),
+        model(m),
+        neighborsGen,
+        (neighborsGen(0))(solution),
+        PermutationSMTPWTPFitness,
+        0), model(m))
+        
+    Logger.write(m+"\t"+score+"\t"+PermutationSMTPWTPFitness.counter+"\n")
+    
+    PermutationSMTPWTPFitness.counter = 0
+    
+    Logger.write("out/"+str+"_"+m,select.score.foldLeft("") {
+      case (acc,s) => acc + s + "\n"
+    })
+    
+    BestSMTWTPSearch.score.clear
+    
+  }
+  
+  Logger.close()
 
 }

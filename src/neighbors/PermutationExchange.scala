@@ -11,4 +11,6 @@ object PermutationExchange extends AbstractNeighborsGenerator[Permutation] {
     indices.map { i => this(solution, i, i+1) }.toList
   }
   
+  override def toString() : String = "exchange"
+  
 }

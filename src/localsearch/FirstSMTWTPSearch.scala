@@ -19,9 +19,12 @@ object FirstSMTWTPSearch extends AbstractLocalSearch[Permutation, SMTWTPModel] {
 
     val newNeighbor = listNeighbors.head
     val newFitness = fitness(newNeighbor, model)
-    if (newFitness < currentFitness)
+    if (newFitness < currentFitness) {
+      score += newFitness
       this(newNeighbor, newFitness, model, neighbors, neighbors(0)(newNeighbor), fitness)
-    else
+    } else
       this(solution, currentFitness, model, neighbors, listNeighbors.tail, fitness)
   }
+  
+  override def toString() : String = "first"
 }
