@@ -4,6 +4,6 @@ import model.AbstractModel
 
 trait AbstractMultiReader[T <: AbstractModel] {
   
-  def read(path : List[String], nbJobs : Int) : T
+  def apply(path : List[String], nbJobs : Int) : T
   
 }

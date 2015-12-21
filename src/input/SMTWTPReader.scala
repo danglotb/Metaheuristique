@@ -4,7 +4,7 @@ import model.SMTWTPModel
 
 object SMTWTPReader extends AbstractReader[SMTWTPModel] {
 
-  override def read(path: String, nbJobs : Int = 100, nbInstance : Int = 125) : Array[SMTWTPModel] = {
+  override def apply(path: String, nbJobs : Int = 100, nbInstance : Int = 125) : Array[SMTWTPModel] = {
     
     val source = scala.io.Source.fromFile(path)
     

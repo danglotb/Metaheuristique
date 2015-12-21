@@ -5,7 +5,7 @@ import model.MTSPModel
 
 object MTSPReader extends AbstractMultiReader[MTSPModel] {
 
-  def read(path: List[String], nbJobs: Int = 100): MTSPModel = {
+  def apply(path: List[String], nbJobs: Int = 100): MTSPModel = {
     val sources = getSources(path)
     val model = new MTSPModel(path.length, nbJobs)
     sources.foreach {source =>

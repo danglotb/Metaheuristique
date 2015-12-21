@@ -11,7 +11,7 @@ import util.Logger
 
 object Main extends App {
   
-  val model = input.SMTWTPReader.read("data/wt100")
+  val model = input.SMTWTPReader("data/wt100")
   
   val init = SMTWTPRandomHeuristique
   
