@@ -13,9 +13,9 @@ object Main extends App {
   
   val model = input.SMTWTPReader.read("data/wt100")
   
-  val init = SMTWTPMDDHeuristique
+  val init = SMTWTPRandomHeuristique
   
-  val neighborsGen = List(PermutationInsert)
+  val neighborsGen = List(PermutationExchange)
   
   val select = BestSMTWTPSearch
   

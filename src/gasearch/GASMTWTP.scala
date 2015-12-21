@@ -32,7 +32,9 @@ object GASMTWTP extends AbstractGASearch[Permutation, SMTWTPModel] {
       val mutants = mutation(population, mutationInner, (population.size * probaMutation).toInt,
         scala.util.Random.shuffle(indices.toList), couplesJobs.toList)
 
-      val select = selection((population ++ children ++ mutants), fitness, model, population.size)
+      val newPopulation = (population ++ children ++ mutants).sortBy { x =>  - fitness(x,model) } 
+        
+      val select = selection(newPopulation, fitness, model, population.size)
 
       this(model, select, crossover, mutationInner, probaMutation, numberGene, fitness, currentGene + 1)
     }
@@ -71,10 +73,8 @@ object GASMTWTP extends AbstractGASearch[Permutation, SMTWTPModel] {
                         newPopulation: List[Permutation] = Nil): List[Permutation] = {
     if (newPopulation.size == size)
       newPopulation
-    else {
-      val best = (population).maxBy { x => fitness(x, model) }
-      selection(population.filter(x => x != best), fitness, model, size, newPopulation :+ best)
-    }
+    else
+      selection(population.tail, fitness, model, size, newPopulation :+ population.head)
   }
 
 }
