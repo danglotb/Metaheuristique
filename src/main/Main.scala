@@ -13,9 +13,9 @@ object Main extends App {
   
   val model = input.SMTWTPReader.read("data/wt100")
   
-  val init = SMTWTPEDDHeuristique
+  val init = SMTWTPMDDHeuristique
   
-  val neighborsGen = List(PermutationSwap)
+  val neighborsGen = List(PermutationInsert)
   
   val select = BestSMTWTPSearch
   
@@ -40,13 +40,6 @@ object Main extends App {
     Logger.write(m+"\t"+score+"\t"+PermutationSMTPWTPFitness.counter+"\n")
     
     PermutationSMTPWTPFitness.counter = 0
-    
-    Logger.write("out/"+str+"_"+m,select.score.foldLeft("") {
-      case (acc,s) => acc + s + "\n"
-    })
-    
-    BestSMTWTPSearch.score.clear
-    
   }
   
   Logger.close()
