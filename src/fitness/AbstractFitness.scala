@@ -4,7 +4,7 @@ package fitness
 import solution.AbstractSolution
 import model.AbstractModel
 
-trait AbstractFitness[S <: AbstractSolution, M <: AbstractModel ] {
+trait AbstractFitness[S <: AbstractSolution, M <: AbstractModel] {
   
   var counter : Int = 0
   

@@ -15,7 +15,7 @@ object Main extends App {
   
   val init = SMTWTPRandomHeuristique
   
-  val neighborsGen = List(PermutationExchange)
+  val neighborsGen = List(PermutationInsert)
   
   val select = BestSMTWTPSearch
   
