@@ -37,9 +37,15 @@ object MTSPReader extends AbstractMultiReader[MTSPModel] {
     listSources.toList
   }
 
-  private def removeHeader(it: Iterator[String]) : Iterator[String] = {
-    for (i  <- 0 until 5) { it next }
-    it
+  def removeHeader(it : Iterator[String], currentLine: String = ""): Iterator[String] = {
+    try {
+      if (currentLine.toInt == 0)
+        return it
+      else
+        removeHeader(it, it next)
+    } catch {
+      case  e : java.lang.NumberFormatException =>  removeHeader(it, it next)
+    }
   }
 
 }

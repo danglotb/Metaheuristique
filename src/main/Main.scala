@@ -10,18 +10,18 @@ import advancedsearch._
 import util.Logger
 
 object Main extends App {
-  
+
   val model = input.SMTWTPReader("data/wt100")
-  
+
   val init = SMTWTPRandomHeuristique
-  
+
   val neighborsGen = List(PermutationInsert)
-  
-  val select = BestSMTWTPSearch
-  
-  val str  = select.toString+"_"+init.toString+"_"+neighborsGen(0).toString()
-  
-  Logger.open("out/"+str)
+
+  val select = FirstSMTWTPSearch
+
+  val str = select.toString + "_" + init.toString + "_" + neighborsGen(0).toString()
+
+  Logger.open("out/" + str)
 
   for (m <- 0 until model.length) {
     println(m)
@@ -36,12 +36,12 @@ object Main extends App {
         (neighborsGen(0))(solution),
         PermutationSMTPWTPFitness,
         0), model(m))
-        
-    Logger.write(m+"\t"+score+"\t"+PermutationSMTPWTPFitness.counter+"\n")
-    
+
+    Logger.write(m + "\t" + score + "\t" + PermutationSMTPWTPFitness.counter + "\n")
+
     PermutationSMTPWTPFitness.counter = 0
   }
-  
+
   Logger.close()
 
 }

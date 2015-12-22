@@ -14,4 +14,14 @@ class MTSPModel(nbObjectif : Int,nbJob : Int) extends AbstractModel {
   
   def nbJobs = nbJob
   
+  override def toString : String = {
+    values.foldLeft(""){
+      case (acc,i) => acc + i.foldLeft("") {
+        case (acc,j) => acc + j.foldLeft("") {
+          case (acc,k) => acc + k + "\t"
+        } + "\n"
+      } + "\n"
+    }
+  }
+  
 }
