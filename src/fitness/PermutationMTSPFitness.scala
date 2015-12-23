@@ -5,7 +5,10 @@ import model.MTSPModel
 
 object PermutationMTSPFitness extends AbstractMFitness[Permutation, MTSPModel] {
 
-  override def apply(solution: Permutation, model: MTSPModel): List[Int] = compute(solution, model, List.fill(model.nbObjectifs)(0))
+  override def apply(solution: Permutation, model: MTSPModel): List[Int] = {
+    counter += 1
+    compute(solution, model, List.fill(model.nbObjectifs)(0))
+  }
 
   private def compute(solution: Permutation,
                       model: MTSPModel,
