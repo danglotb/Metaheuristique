@@ -3,32 +3,37 @@ package crossover
 import solution.Permutation
 
 object COPositionBaseSMTWTP extends AbstractCrossOver[Permutation] {
-  
-   override def apply(parent1: Permutation, parent2: Permutation) : List[Permutation] = {
-     
-     val size = parent1.permutation.size / 2
-     val indices = scala.util.Random.shuffle((parent1.permutation.indices).toList)
-     
-     val indices1 = indices.dropRight(size)
-     val indices2 = indices.drop(size)
-     
-     buildChildren(parent1,parent2, indices1, indices2)
-   }
-   
-   private def buildChildren(parent1: Permutation, 
-       parent2: Permutation, 
-       indices1 : List[Int],
-       indices2 : List[Int],
-       children : (List[Int],List[Int]) = (Nil,Nil),
-       index : Int = 0) : List[Permutation] = {
-     if (index == indices1.length)
-       List(new Permutation(children._1), new Permutation(children._2))
-     else {
-       buildChildren(parent1,parent2,indices1,indices2,
-           (children._1 :+ parent1(indices1(index)) :+ parent2(indices2(index)),
-       children._2 :+ parent2(indices1(index)) :+ parent1(indices2(index)))
-       , index + 1)
-     }
-   }
-  
+
+  override def apply(parent1: Permutation, parent2: Permutation): List[Permutation] = {
+
+    val size = parent1.permutation.size / 2
+    val indices = (scala.util.Random.shuffle((parent1.permutation.indices).toList)).dropRight(size).sortBy { x => x }
+
+    List(buildChild(parent1.permutation, parent2.permutation.diff(build(parent1, indices)), indices),
+      buildChild(parent2.permutation, parent1.permutation.diff(build(parent2, indices)), indices))
+  }
+
+  private def buildChild(parent1: List[Int],
+                         elemOfParent2: List[Int],
+                         indices: List[Int],
+                         index: Int = 0,
+                         child: List[Int] = Nil): Permutation = {
+    if (index == parent1.length)
+      new Permutation(child)
+    else {
+      if (indices.contains(index)) {
+        buildChild(parent1, elemOfParent2, indices, index + 1, child :+ parent1(index))
+      } else
+        buildChild(parent1, elemOfParent2.tail, indices, index + 1, child :+ elemOfParent2.head)
+    }
+  }
+
+  private def build(parent: Permutation,
+                    indices: List[Int],
+                    child: List[Int] = Nil): List[Int] = {
+    if (indices.isEmpty)
+      child
+    else
+      build(parent, indices.tail, child :+ parent(indices.head))
+  }
 }

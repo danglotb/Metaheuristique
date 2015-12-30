@@ -37,7 +37,7 @@ object MASMTWTP extends AbstractMASearch[Permutation, SMTWTPModel] {
         localSearchNeighbors(0)(m),
         fitness, 0)) ++ population)
 
-      val select = selection(newPopulation.sortBy { x => -fitness(x, model) },
+      val select = selection(newPopulation.sortBy { x => fitness(x, model) },
         fitness,
         model,
         population.size)

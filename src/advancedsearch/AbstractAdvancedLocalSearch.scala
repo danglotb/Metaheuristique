@@ -7,7 +7,7 @@ import neighbors.AbstractNeighborsGenerator
 import fitness.AbstractFitness
 
 trait AbstractAdvancedSearch[S <: AbstractSolution, M <: AbstractModel] {
-
+  
   def apply(solution: S,
             model: M,
             intensification: AbstractLocalSearch[S, M],

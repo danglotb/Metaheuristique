@@ -9,305 +9,53 @@ import localsearch._
 import advancedsearch._
 import model._
 import util.Logger
+import advancedsearch.ILSSMTWTP
 
 object Main extends App {
+  
+  def getDifficulties(best : Int) : Int = {
+    if (best < 10000) 
+      1
+    else if (best < 100000)
+      2
+    else if (best < 500000)
+      3
+    else
+      4
+  }
 
   val model = input.SMTWTPReader("data/wt100")
-
-  var init : AbstractHeuristique[SMTWTPModel, Permutation] = SMTWTPRandomHeuristique
-
-  var neighborsGen : List[AbstractNeighborsGenerator[Permutation]] = List(PermutationExchange, PermutationSwap, PermutationInsert)
-
-  var select : AbstractLocalSearch[Permutation,SMTWTPModel] = VNDSMTWTPSearch
-
-  var str = select.toString + "_" + init.toString + "_" + neighborsGen(1).toString() + "_" + neighborsGen(2).toString() 
   
-  println(str)
+  val it = (scala.io.Source.fromFile("data/wtbest100b.txt")).getLines
+  
+  Logger.open("out/ils_timeOut_30k_pvnd")
 
-  Logger.open("out/" + str)
-
-  for (m <- 0 until model.length) {
-    println(m)
+  for (i <- 0 until model.length) {
+    val best = ((it next).replaceAll(" ", "")).toInt
+    val difficulty = getDifficulties(best)
+    print(best + "\t" + difficulty) 
     val time = System.currentTimeMillis()
-    val solution = init(model(m))
-    val score = PermutationSMTPWTPFitness(
-      select(
-        solution,
-        PermutationSMTPWTPFitness(solution, model(m)),
-        model(m),
-        neighborsGen,
-        (neighborsGen(0))(solution),
+    def timeoutAndBest() : Boolean = System.currentTimeMillis() > (30000*difficulty) + time || best >= ILSSMTWTP.currentFitnessG
+    
+    val initSolution = SMTWTPEDDHeuristique(model(i))
+    
+    val score = PermutationSMTPWTPFitness(ILSSMTWTP(initSolution,
+        model(i),
+        PipedVNDSMTWTPSearch,
+        List(PermutationExchange, PermutationSwap, PermutationInsert),
+        PermutationExchange,
         PermutationSMTPWTPFitness,
-        0), model(m))
-
-    Logger.write(m + "\t" + score + "\t" + (System.currentTimeMillis()-time)  +"\t" + PermutationSMTPWTPFitness.counter + "\n")
-
+        PermutationSMTPWTPFitness(initSolution, model(i)), timeoutAndBest), model(i))
+      
+    val str = i+"\t"+score+"\t"+(System.currentTimeMillis()-time)+"\t"+PermutationSMTPWTPFitness.counter+"\n"
+    Logger.write(str)
+    print("\t"+str)
+    
+    ILSSMTWTP.currentFitnessG = Integer.MAX_VALUE
+    ILSSMTWTP.bestFitness = Integer.MAX_VALUE
     PermutationSMTPWTPFitness.counter = 0
   }
-
-  Logger.close()
   
-  /**
-   * 
-   */
-  
-  init = SMTWTPRandomHeuristique
-
-  neighborsGen = List(PermutationExchange, PermutationInsert, PermutationSwap)
-
-  select = VNDSMTWTPSearch
-
-  str = select.toString + "_" + init.toString + "_" + neighborsGen(1).toString() + "_" + neighborsGen(2).toString() 
-  
-  println(str)
-
-  Logger.open("out/" + str)
-
-  for (m <- 0 until model.length) {
-    println(m)
-    val time = System.currentTimeMillis()
-    val solution = init(model(m))
-    val score = PermutationSMTPWTPFitness(
-      select(
-        solution,
-        PermutationSMTPWTPFitness(solution, model(m)),
-        model(m),
-        neighborsGen,
-        (neighborsGen(0))(solution),
-        PermutationSMTPWTPFitness,
-        0), model(m))
-
-    Logger.write(m + "\t" + score + "\t" + (System.currentTimeMillis()-time)  +"\t" + PermutationSMTPWTPFitness.counter + "\n")
-
-    PermutationSMTPWTPFitness.counter = 0
-  }
-
-  Logger.close()
-  
-  /**
-   * 
-   */
-  
-  init = SMTWTPEDDHeuristique
-
-  neighborsGen = List(PermutationExchange, PermutationInsert, PermutationSwap)
-
-  select = VNDSMTWTPSearch
-
-  str = select.toString + "_" + init.toString + "_" + neighborsGen(1).toString() + "_" + neighborsGen(2).toString() 
-  
-  println(str)
-
-  Logger.open("out/" + str)
-
-  for (m <- 0 until model.length) {
-    println(m)
-    val time = System.currentTimeMillis()
-    val solution = init(model(m))
-    val score = PermutationSMTPWTPFitness(
-      select(
-        solution,
-        PermutationSMTPWTPFitness(solution, model(m)),
-        model(m),
-        neighborsGen,
-        (neighborsGen(0))(solution),
-        PermutationSMTPWTPFitness,
-        0), model(m))
-
-    Logger.write(m + "\t" + score + "\t" + (System.currentTimeMillis()-time)  +"\t" + PermutationSMTPWTPFitness.counter + "\n")
-
-    PermutationSMTPWTPFitness.counter = 0
-  }
-
-  Logger.close()
-  
-  /**
-   * 
-   */
-  
-  init = SMTWTPEDDHeuristique
-
-  neighborsGen = List(PermutationExchange, PermutationSwap, PermutationInsert)
-
-  select = VNDSMTWTPSearch
-
-  str = select.toString + "_" + init.toString + "_" + neighborsGen(1).toString() + "_" + neighborsGen(2).toString() 
-  
-  println(str)
-
-  Logger.open("out/" + str)
-
-  for (m <- 0 until model.length) {
-    println(m)
-    val time = System.currentTimeMillis()
-    val solution = init(model(m))
-    val score = PermutationSMTPWTPFitness(
-      select(
-        solution,
-        PermutationSMTPWTPFitness(solution, model(m)),
-        model(m),
-        neighborsGen,
-        (neighborsGen(0))(solution),
-        PermutationSMTPWTPFitness,
-        0), model(m))
-
-    Logger.write(m + "\t" + score + "\t" + (System.currentTimeMillis()-time)  +"\t" + PermutationSMTPWTPFitness.counter + "\n")
-
-    PermutationSMTPWTPFitness.counter = 0
-  }
-
-  Logger.close()
- 
-  
-  /**
-   * 
-   * 
-   * 
-   * 
-   */
-  
-  init = SMTWTPRandomHeuristique
-
-  neighborsGen = List(PermutationExchange, PermutationSwap, PermutationInsert)
-
-  select = PipedVNDSMTWTPSearch
-
-  str = select.toString + "_" + init.toString + "_" + neighborsGen(1).toString() + "_" + neighborsGen(2).toString() 
-  
-  println(str)
-
-  Logger.open("out/" + str)
-
-  for (m <- 0 until model.length) {
-    println(m)
-    val time = System.currentTimeMillis()
-    val solution = init(model(m))
-    val score = PermutationSMTPWTPFitness(
-      select(
-        solution,
-        PermutationSMTPWTPFitness(solution, model(m)),
-        model(m),
-        neighborsGen,
-        (neighborsGen(0))(solution),
-        PermutationSMTPWTPFitness,
-        0), model(m))
-
-    Logger.write(m + "\t" + score + "\t" + (System.currentTimeMillis()-time)  +"\t" + PermutationSMTPWTPFitness.counter + "\n")
-
-    PermutationSMTPWTPFitness.counter = 0
-  }
-
-  Logger.close()
-  
-  /**
-   * 
-   */
-  
-  init = SMTWTPRandomHeuristique
-
-  neighborsGen = List(PermutationExchange, PermutationInsert, PermutationSwap)
-
-  select = PipedVNDSMTWTPSearch
-
-  str = select.toString + "_" + init.toString + "_" + neighborsGen(1).toString() + "_" + neighborsGen(2).toString() 
-  
-  println(str)
-
-  Logger.open("out/" + str)
-
-  for (m <- 0 until model.length) {
-    println(m)
-    val time = System.currentTimeMillis()
-    val solution = init(model(m))
-    val score = PermutationSMTPWTPFitness(
-      select(
-        solution,
-        PermutationSMTPWTPFitness(solution, model(m)),
-        model(m),
-        neighborsGen,
-        (neighborsGen(0))(solution),
-        PermutationSMTPWTPFitness,
-        0), model(m))
-
-    Logger.write(m + "\t" + score + "\t" + (System.currentTimeMillis()-time)  +"\t" + PermutationSMTPWTPFitness.counter + "\n")
-
-    PermutationSMTPWTPFitness.counter = 0
-  }
-
-  Logger.close()
-  
-  /**
-   * 
-   */
-  
-  init = SMTWTPEDDHeuristique
-
-  neighborsGen = List(PermutationExchange, PermutationInsert, PermutationSwap)
-
-  select = PipedVNDSMTWTPSearch
-
-  str = select.toString + "_" + init.toString + "_" + neighborsGen(1).toString() + "_" + neighborsGen(2).toString() 
-  
-  println(str)
-
-  Logger.open("out/" + str)
-
-  for (m <- 0 until model.length) {
-    println(m)
-    val time = System.currentTimeMillis()
-    val solution = init(model(m))
-    val score = PermutationSMTPWTPFitness(
-      select(
-        solution,
-        PermutationSMTPWTPFitness(solution, model(m)),
-        model(m),
-        neighborsGen,
-        (neighborsGen(0))(solution),
-        PermutationSMTPWTPFitness,
-        0), model(m))
-
-    Logger.write(m + "\t" + score + "\t" + (System.currentTimeMillis()-time)  +"\t" + PermutationSMTPWTPFitness.counter + "\n")
-
-    PermutationSMTPWTPFitness.counter = 0
-  }
-
-  Logger.close()
-  
-  /**
-   * 
-   */
-  
-  init = SMTWTPEDDHeuristique
-
-  neighborsGen = List(PermutationExchange, PermutationSwap, PermutationInsert)
-
-  select = PipedVNDSMTWTPSearch
-
-  str = select.toString + "_" + init.toString + "_" + neighborsGen(1).toString() + "_" + neighborsGen(2).toString() 
-  
-  println(str)
-
-  Logger.open("out/" + str)
-
-  for (m <- 0 until model.length) {
-    println(m)
-    val time = System.currentTimeMillis()
-    val solution = init(model(m))
-    val score = PermutationSMTPWTPFitness(
-      select(
-        solution,
-        PermutationSMTPWTPFitness(solution, model(m)),
-        model(m),
-        neighborsGen,
-        (neighborsGen(0))(solution),
-        PermutationSMTPWTPFitness,
-        0), model(m))
-
-    Logger.write(m + "\t" + score + "\t" + (System.currentTimeMillis()-time)  +"\t" + PermutationSMTPWTPFitness.counter + "\n")
-
-    PermutationSMTPWTPFitness.counter = 0
-  }
-
   Logger.close()
 
 }
