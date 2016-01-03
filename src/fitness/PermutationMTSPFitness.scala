@@ -10,6 +10,16 @@ object PermutationMTSPFitness extends AbstractMFitness[Permutation, MTSPModel] {
     compute(solution, model, List.fill(model.nbObjectifs)(0))
   }
 
+  def computeAllScores(solutions: List[Permutation],
+                       model: MTSPModel,
+                       scores: List[List[Int]] = Nil,
+                       index: Int = 0): List[List[Int]] = {
+    if (index == solutions.length)
+      scores
+    else
+      computeAllScores(solutions, model, scores :+ this(solutions(index), model), index + 1)
+  }
+
   private def compute(solution: Permutation,
                       model: MTSPModel,
                       scores: List[Int],
@@ -22,22 +32,30 @@ object PermutationMTSPFitness extends AbstractMFitness[Permutation, MTSPModel] {
 
   private def update(scores: List[Int],
                      index: Int, model: MTSPModel,
-                     solution: Permutation, i: Int = 0): List[Int] = {
+                     solution: Permutation,
+                     i: Int = 0): List[Int] = {
     if (i == model.nbObjectifs)
       scores
-    else
-      update(scores.updated(i, scores(i) + model(i, solution(index), solution(index + 1))),
+    else {
+      val min = math.min(solution(index), solution(index + 1))
+      val max = math.max(solution(index), solution(index + 1))
+      update(scores.updated(i, scores(i) + model(i, min, max)),
         index, model, solution, i + 1)
+    }
   }
 
   private def updateLast(scores: List[Int],
                          index: Int, model: MTSPModel,
                          solution: Permutation, i: Int = 0): List[Int] = {
-    if (i == model.nbObjectifs)
+    if (i == model.nbObjectifs) 
       scores
-    else
-      updateLast(scores.updated(i, scores(i) + model(i, solution(index), solution(1))),
+    else {
+      val min = math.min(solution(index), solution(0))
+      val max = math.max(solution(index), solution(0))
+      updateLast(scores.updated(i, scores(i) +  model(i, min, max)),
         index, model, solution, i + 1)
+    }
+
   }
 
 }

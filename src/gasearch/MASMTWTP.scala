@@ -8,6 +8,8 @@ import neighbors.AbstractNeighborsGenerator
 import localsearch.AbstractLocalSearch
 
 object MASMTWTP extends AbstractMASearch[Permutation, SMTWTPModel] {
+  
+  var nbGeneration : Int = 0
 
   def apply(model: SMTWTPModel,
             fitness: AbstractFitness[Permutation, SMTWTPModel],
@@ -19,6 +21,7 @@ object MASMTWTP extends AbstractMASearch[Permutation, SMTWTPModel] {
             localSearch: AbstractLocalSearch[Permutation, SMTWTPModel],
             localSearchNeighbors: List[AbstractNeighborsGenerator[Permutation]],
             criterionAcceptance: (() => Boolean)): List[Permutation] = {
+    println("Generation : " + nbGeneration)
     if (criterionAcceptance())
       population
     else {
@@ -38,10 +41,10 @@ object MASMTWTP extends AbstractMASearch[Permutation, SMTWTPModel] {
         fitness, 0)) ++ population)
 
       val select = selection(newPopulation.sortBy { x => fitness(x, model) },
-        fitness,
-        model,
         population.size)
 
+      nbGeneration += 1
+        
       this(model, fitness, select, crossover,
           crossoverRate, mutationInner, mutationRate,
           localSearch, localSearchNeighbors, criterionAcceptance)
@@ -68,7 +71,7 @@ object MASMTWTP extends AbstractMASearch[Permutation, SMTWTPModel] {
       newPopulation
     else {
       if (new java.util.Random().nextFloat() > mutationRate) {
-        val indices = population.indices
+        val indices = population.head.permutation.indices
         val tails = indices.tail map (i => indices drop i)
         val couples = scala.util.Random.shuffle((indices zip tails) flatMap (c => c._2 map (i => (c._1, i))))
         mutation(population.tail, mutationInner, mutationRate, newPopulation :+ mutationInner(population.head, couples.head._1, couples.head._2))
@@ -78,14 +81,12 @@ object MASMTWTP extends AbstractMASearch[Permutation, SMTWTPModel] {
   }
 
   private def selection(population: List[Permutation],
-                        fitness: AbstractFitness[Permutation, SMTWTPModel],
-                        model: SMTWTPModel,
                         size: Int,
                         newPopulation: List[Permutation] = Nil): List[Permutation] = {
     if (newPopulation.size == size)
       newPopulation
     else {
-      selection(population.tail, fitness, model, size, newPopulation :+ population.head)
+      selection(population.tail, size, newPopulation :+ population.head)
     }
   }
 }

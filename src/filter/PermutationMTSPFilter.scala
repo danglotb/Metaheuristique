@@ -6,28 +6,48 @@ import model.MTSPModel
 
 object PermutationMTSPFilter extends AbstractFilter[Permutation, MTSPModel] {
 
-  override def apply(solutions : List[Permutation], model : MTSPModel) : List[Permutation] = {
-    val scores = computeAllScores(solutions, model)
-    solutions.filter { x => dominate(scores(solutions.indexOf(x)), scores.filter(s => s != scores(solutions.indexOf(x)))) }
-  }
+  var nbComparaison : Int = 0
   
-  private def computeAllScores(solutions : List[Permutation],
-      model : MTSPModel,
-      scores : List[List[Int]] = Nil, 
-      index : Int = 0) : List[List[Int]] = {
-    if(index == solutions.length)
-      scores
-    else
-      computeAllScores(solutions, model,scores :+ PermutationMTSPFitness(solutions(index), model), index + 1)
-  }
-  
-  private def dominate(score : List[Int], other : List[List[Int]]) : Boolean = {
-    other.foreach { o =>
-      for (i <- 0 until score.length)
-        if (score(i) >= o(i))
-          return false
+  override def apply(solutions: List[Permutation], model: MTSPModel): List[Permutation] = {
+
+    val scores = PermutationMTSPFitness.computeAllScores(solutions, model)
+
+    val dominated = solutions.filter { x =>
+      val others = scores.diff(List(scores(solutions.indexOf(x))))
+      isDominated(scores(solutions.indexOf(x)), others)
     }
-    true
+    solutions.diff(dominated)
+  }
+
+  private def isDominated(score: List[Int], other: List[List[Int]]): Boolean = {
+    other.foreach { o =>
+      var b = true
+      for (i <- 0 until score.length) {
+        nbComparaison += 1
+        b &= score(i) > o(i)
+      }
+      if (b)
+        return b
+    }
+    false
+  }
+  
+  def buildRandomInstance(model: MTSPModel, nbInstance: Int = 500, list: List[Permutation] = Nil): List[Permutation] = {
+    if (list.size == nbInstance)
+      list
+    else
+      buildRandomInstance(model, nbInstance, list :+ heuristiques.MTSPRandomHeuristique(model))
+  }
+
+  def buildRandomInstanceFilterOnLine(model: MTSPModel,
+                                      i: Int = 0,
+                                      nbInstance: Int = 500,
+                                      list: List[Permutation] = Nil): List[Permutation] = {
+    if (i == nbInstance)
+      list
+    else {
+      buildRandomInstanceFilterOnLine(model, i + 1, nbInstance, PermutationMTSPFilter((list :+ heuristiques.MTSPRandomHeuristique(model)), model))
+    }
   }
 
 }

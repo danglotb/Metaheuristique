@@ -7,9 +7,10 @@ import fitness.AbstractMFitness
 
 trait AbstractParetoMLocalSearch[S <: AbstractSolution, M <: AbstractModel] {
 
-  def apply(solutions: List[S],
-            archives: List[S] = Nil,
+  def apply(model: M,
+            solutions: List[S],
             neighbors: AbstractNeighborsGenerator[S],
-            fitness: AbstractMFitness[S, M]): List[S]
+            acceptanceCriterion: () => Boolean,
+            archives: List[S]): List[S]
 
 }
